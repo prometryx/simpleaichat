@@ -77,7 +77,7 @@ class ChatSession(BaseModel):
         self,
         user_message: ChatMessage,
         assistant_message: Optional[ChatMessage] = None,
-        save_messages: bool = False,
+        save_messages: bool = None,
     ) -> None:
         # if save_messages is explicitly defined, always use that choice
         # instead of the default
