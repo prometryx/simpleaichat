@@ -94,8 +94,8 @@ class ChatGPTSession(ChatSession):
         prompt: str,
         client: Union[Client, AsyncClient],
         system: Optional[str] = None,
+        save_messages: bool = None,
         params: Optional[Dict[str, Any]] = None,
-        save_messages: bool = False,
         input_schema: Any = None,
         output_schema: Any = None,
     ):
