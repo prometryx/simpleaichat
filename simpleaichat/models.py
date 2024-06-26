@@ -19,7 +19,7 @@ def now_tz():
 
 class ChatMessage(BaseModel):
     role: str
-    content: str
+    content: str | List[Dict[str, Any]]
     name: Optional[str] = None
     function_call: Optional[str] = None
     received_at: datetime.datetime = Field(default_factory=now_tz)
@@ -76,8 +76,8 @@ class ChatSession(BaseModel):
     def add_messages(
         self,
         user_message: ChatMessage,
-        assistant_message: ChatMessage,
-        save_messages: bool = None,
+        assistant_message: Optional[ChatMessage] = None,
+        save_messages: bool = False,
     ) -> None:
         # if save_messages is explicitly defined, always use that choice
         # instead of the default
@@ -86,7 +86,9 @@ class ChatSession(BaseModel):
         if to_save:
             if save_messages:
                 self.messages.append(user_message)
-                self.messages.append(assistant_message)
+                if assistant_message:
+                    self.messages.append(assistant_message)
         elif self.save_messages:
             self.messages.append(user_message)
-            self.messages.append(assistant_message)
+            if assistant_message:
+                self.messages.append(assistant_message)

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Set, Union
+from typing import Any, Dict, List, Set, Union, Optional
 
 import orjson
 from httpx import AsyncClient, Client
@@ -23,8 +23,8 @@ class ChatGPTSession(ChatSession):
     def prepare_request(
         self,
         prompt: str,
-        system: str = None,
-        params: Dict[str, Any] = None,
+        system: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None,
         stream: bool = False,
         input_schema: Any = None,
         output_schema: Any = None,
@@ -64,9 +64,11 @@ class ChatGPTSession(ChatSession):
                 functions.append(input_function)
             if output_schema:
                 output_function = self.schema_to_function(output_schema)
-                functions.append(
-                    output_function
-                ) if output_function not in functions else None
+                (
+                    functions.append(output_function)
+                    if output_function not in functions
+                    else None
+                )
                 if is_function_calling_required:
                     data["function_call"] = {"name": output_schema.__name__}
             data["functions"] = functions
@@ -91,9 +93,9 @@ class ChatGPTSession(ChatSession):
         self,
         prompt: str,
         client: Union[Client, AsyncClient],
-        system: str = None,
-        save_messages: bool = None,
-        params: Dict[str, Any] = None,
+        system: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None,
+        save_messages: bool = False,
         input_schema: Any = None,
         output_schema: Any = None,
     ):
